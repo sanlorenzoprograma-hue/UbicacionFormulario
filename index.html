@@ -73,4 +73,37 @@
                         textoPantalla += `<br>Departamento: ${address.state}`;
                     }
                     if (address.country) {
-                        textoPantalla +=
+                        textoPantalla += `<br>País: ${address.country}`;
+                    }
+
+                    document.getElementById('direccion').innerHTML = textoPantalla;
+                    
+                    // Asignar los valores a las variables globales para el formulario
+                    coordsGuardadas = { lat: lat.toFixed(6), lon: lng.toFixed(6) };
+                    departamentoGuardado = address.state || '';
+                    distritoGuardado = address.municipality || '';
+                    ciudadGuardada = address.city || address.town || address.village || '';
+                    barrioGuardado = address.neighbourhood || address.suburb || '';
+                    direccionGuardada = address.road || '';
+                })
+                .catch(error => {
+                    console.error('Error al obtener la dirección:', error);
+                    document.getElementById('direccion').innerHTML = 'No se pudo obtener la dirección de esa ubicación.';
+                });
+        }
+        
+        // Actualiza la ubicación cuando se arrastra el marcador
+        marcador.on('dragend', function(event) {
+            var latLng = event.target.getLatLng();
+            obtenerDireccion(latLng.lat, latLng.lng);
+        });
+
+        // Actualiza la ubicación cuando se hace clic en el mapa
+        map.on('click', function(event) {
+            var latLng = event.latlng;
+            marcador.setLatLng(latLng);
+            obtenerDireccion(latLng.lat, latLng.lng);
+        });
+    </script>
+</body>
+</html>
