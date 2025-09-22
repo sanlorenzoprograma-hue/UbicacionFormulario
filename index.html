@@ -107,9 +107,7 @@
 
         function enviarCoordenadas() {
             if (coordsGuardadas) {
-                var url = "tu_formulario.html" + 
-                          "?latitud=" + coordsGuardadas.lat + 
-                          "&longitud=" + coordsGuardadas.lon;
+                var url = "https://docs.google.com/forms/d/e/1FAIpQLSfXlPeQIKBEYyfgJRg-B6vUM2mGbkSqlmVciFJCgTHy9AoSsQ/viewform?usp=pp_url&entry.391303732=" + coordsGuardadas.lat + "&entry.1348054148=" + coordsGuardadas.lon;
                 
                 // Redirige al usuario al formulario con las coordenadas en la URL
                 window.location.href = url;
