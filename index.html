@@ -14,7 +14,7 @@
 <body>
 
     <h2>Marque la ubicación del lugar</h2>
-    <p class="info">Haga clic en el mapa para obtener los datos.</p>
+    <p class="info">Haga clic en el mapa o arrastre el marcador para obtener los datos.</p>
 
     <div id="map"></div>
     <br>
@@ -47,35 +47,30 @@
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    var direccion = data.address;
+                    var address = data.address;
+                    var textoPantalla = `Lat: ${lat.toFixed(6)}, Lon: ${lng.toFixed(6)}`;
                     
-                    var departamento = direccion.state || direccion.province || '';
-                    var distrito = direccion.municipality || direccion.county || '';
-                    var ciudad = direccion.city || direccion.town || direccion.village || '';
-                    var barrio = direccion.suburb || direccion.neighbourhood || '';
-                    var callePrincipal = direccion.road || '';
-                    var calleTransversal = direccion.suburb || direccion.neighbourhood || direccion.county || '';
-
-                    let textoPantalla = `Lat: ${lat.toFixed(6)}, Lon: ${lng.toFixed(6)}`;
-                    
-                    let textoDireccionCompleta = '';
-
-                    if (callePrincipal && calleTransversal) {
-                        textoPantalla += `<br>Dirección: ${callePrincipal} y ${calleTransversal}`;
-                        textoDireccionCompleta = `${callePrincipal} y ${calleTransversal}`;
-                    } else if (callePrincipal) {
-                        textoPantalla += `<br>Dirección: ${callePrincipal}`;
-                        textoDireccionCompleta = `${callePrincipal}`;
-                    } else if (barrio) {
-                        textoPantalla += `<br>Barrio: ${barrio}`;
-                        textoDireccionCompleta = `${barrio}`;
+                    if (address.road) {
+                        textoPantalla += `<br>Dirección: ${address.road}`;
                     }
-
-                    if (barrio) {
-                        textoPantalla += `<br>Barrio: ${barrio}`;
+                    if (address.neighbourhood) {
+                        textoPantalla += `<br>Barrio: ${address.neighbourhood}`;
                     }
-                    if (distrito) {
-                        textoPantalla += `<br>Distrito: ${distrito}`;
+                    if (address.suburb) {
+                        textoPantalla += `<br>Barrio: ${address.suburb}`;
                     }
-                    if (ciudad) {
-                        textoPantalla
+                    if (address.municipality) {
+                        textoPantalla += `<br>Distrito: ${address.municipality}`;
+                    }
+                    if (address.city) {
+                        textoPantalla += `<br>Ciudad: ${address.city}`;
+                    } else if (address.town) {
+                        textoPantalla += `<br>Ciudad: ${address.town}`;
+                    } else if (address.village) {
+                        textoPantalla += `<br>Ciudad: ${address.village}`;
+                    }
+                    if (address.state) {
+                        textoPantalla += `<br>Departamento: ${address.state}`;
+                    }
+                    if (address.country) {
+                        textoPantalla +=
