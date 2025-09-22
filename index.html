@@ -51,7 +51,7 @@
                     var textoPantalla = `Lat: ${lat.toFixed(6)}, Lon: ${lng.toFixed(6)}`;
                     
                     var callePrincipal = address.road || '';
-                    var calleTransversal = address.neighbourhood || address.suburb || '';
+                    var calleTransversal = address.crossing || ''; // Nuevo: Usa 'crossing' para la transversal
                     
                     // Lógica para mostrar las calles en pantalla
                     if (callePrincipal && calleTransversal) {
@@ -60,9 +60,14 @@
                     } else if (callePrincipal) {
                         textoPantalla += `<br>Dirección: ${callePrincipal}`;
                         direccionGuardada = callePrincipal;
+                    }
+
+                    if (address.neighbourhood) {
+                        textoPantalla += `<br>Barrio: ${address.neighbourhood}`;
+                        barrioGuardado = address.neighbourhood;
                     } else if (address.suburb) {
                         textoPantalla += `<br>Barrio: ${address.suburb}`;
-                        direccionGuardada = address.suburb;
+                        barrioGuardado = address.suburb;
                     }
 
                     if (address.municipality) {
@@ -86,7 +91,9 @@
                     departamentoGuardado = address.state || '';
                     distritoGuardado = address.municipality || '';
                     ciudadGuardada = address.city || address.town || address.village || '';
-                    barrioGuardado = address.neighbourhood || address.suburb || '';
+                    if (!barrioGuardado) { // Si no se encontró un barrio antes, busca de nuevo
+                      barrioGuardado = address.neighbourhood || address.suburb || '';
+                    }
 
                 })
                 .catch(error => {
