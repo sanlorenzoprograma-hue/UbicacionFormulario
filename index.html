@@ -104,6 +104,19 @@
             marcador.setLatLng(latLng);
             obtenerDireccion(latLng.lat, latLng.lng);
         });
+
+        function enviarCoordenadas() {
+            if (coordsGuardadas) {
+                var url = "tu_formulario.html" + 
+                          "?latitud=" + coordsGuardadas.lat + 
+                          "&longitud=" + coordsGuardadas.lon;
+                
+                // Redirige al usuario al formulario con las coordenadas en la URL
+                window.location.href = url;
+            } else {
+                alert("Por favor, selecciona una ubicación en el mapa antes de continuar.");
+            }
+        }
     </script>
 </body>
 </html>
