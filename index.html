@@ -107,6 +107,8 @@
             marcador.setLatLng(latLng);
             obtenerDireccion(latLng.lat, latLng.lng);
         });
+        
+        obtenerDireccion(latitudInicial, longitudInicial);
 
         function enviarCoordenadas() {
             if (coordsGuardadas) {
