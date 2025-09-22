@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcar Ubicación en Mapa</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <style>
+        #map { height: 400px; width: 100%; }
+        body { font-family: sans-serif; text-align: center; padding: 20px; }
+        .info { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <h2>Marque la ubicación del lugar</h2>
+    <p class="info">Haga clic en el mapa para obtener los datos.</p>
+
+    <div id="map"></div>
+    <br>
+    <p id="direccion"></p>
+    <button onclick="enviarCoordenadas()">Continuar al formulario</button>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var latitudInicial = -25.2637;
+        var longitudInicial = -57.5759;
+
+        var coordsGuardadas = null;
+        var departamentoGuardado = null;
+        var distritoGuardado = null;
+        var ciudadGuardada = null;
+        var barrioGuardado = null;
+        var direccionGuardada = null;
+
+        var map = L.map('map').setView([latitudInicial, longitudInicial], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var marcador = L.marker([latitudInicial, longitudInicial], { draggable: true }).addTo(map);
+
+        function obtenerDireccion(lat, lng) {
+            var url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    var direccion = data.address;
+                    
+                    var departamento = direccion.state || direccion.province || '';
+                    var distrito = direccion.municipality || direccion.county || '';
+                    var ciudad = direccion.city || direccion.town || direccion.village || '';
+                    var barrio = direccion.suburb || direccion.neighbourhood || '';
+                    var callePrincipal = direccion.road || '';
+                    var calleTransversal = direccion.suburb || direccion.neighbourhood || direccion.county || '';
+
+                    let textoPantalla = `Lat: ${lat.toFixed(6)}, Lon: ${lng.toFixed(6)}`;
+                    
+                    let textoDireccionCompleta = '';
+
+                    if (callePrincipal && calleTransversal) {
+                        textoPantalla += `<br>Dirección: ${callePrincipal} y ${calleTransversal}`;
+                        textoDireccionCompleta = `${callePrincipal} y ${calleTransversal}`;
+                    } else if (callePrincipal) {
+                        textoPantalla += `<br>Dirección: ${callePrincipal}`;
+                        textoDireccionCompleta = `${callePrincipal}`;
+                    } else if (barrio) {
+                        textoPantalla += `<br>Barrio: ${barrio}`;
+                        textoDireccionCompleta = `${barrio}`;
+                    }
+
+                    if (barrio) {
+                        textoPantalla += `<br>Barrio: ${barrio}`;
+                    }
+                    if (distrito) {
+                        textoPantalla += `<br>Distrito: ${distrito}`;
+                    }
+                    if (ciudad) {
+                        textoPantalla
