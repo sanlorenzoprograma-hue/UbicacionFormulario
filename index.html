@@ -107,7 +107,16 @@
 
         function enviarCoordenadas() {
             if (coordsGuardadas) {
-                var url = "https://docs.google.com/forms/d/e/1FAIpQLSfXlPeQIKBEYyfgJRg-B6vUM2mGbkSqlmVciFJCgTHy9AoSsQ/viewform?usp=pp_url&entry.391303732=" + coordsGuardadas.lat + "&entry.1348054148=" + coordsGuardadas.lon;
+                var url = "https://docs.google.com/forms/d/e/1FAIpQLSfXlPeQIKBEYyfgJRg-B6vUM2mGbkSqlmVciFJCgTHy9AoSsQ/viewform?usp=pp_url";
+                
+                // Agrega las variables a la URL
+                url += "&entry.391303732=" + coordsGuardadas.lat;
+                url += "&entry.1348054148=" + coordsGuardadas.lon;
+                url += "&entry.1192183489=" + encodeURIComponent(departamentoGuardado);
+                url += "&entry.1380686983=" + encodeURIComponent(distritoGuardado);
+                url += "&entry.643846282=" + encodeURIComponent(ciudadGuardada);
+                url += "&entry.236446644=" + encodeURIComponent(barrioGuardado);
+                url += "&entry.499772030=" + encodeURIComponent(direccionGuardada);
                 
                 // Redirige al usuario al formulario con las coordenadas en la URL
                 window.location.href = url;
