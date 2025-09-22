@@ -50,15 +50,21 @@
                     var address = data.address;
                     var textoPantalla = `Lat: ${lat.toFixed(6)}, Lon: ${lng.toFixed(6)}`;
                     
-                    if (address.road) {
-                        textoPantalla += `<br>Dirección: ${address.road}`;
-                    }
-                    if (address.neighbourhood) {
-                        textoPantalla += `<br>Barrio: ${address.neighbourhood}`;
-                    }
-                    if (address.suburb) {
+                    var callePrincipal = address.road || '';
+                    var calleTransversal = address.neighbourhood || address.suburb || '';
+                    
+                    // Lógica para mostrar las calles en pantalla
+                    if (callePrincipal && calleTransversal) {
+                        textoPantalla += `<br>Dirección: ${callePrincipal} y ${calleTransversal}`;
+                        direccionGuardada = `${callePrincipal} y ${calleTransversal}`;
+                    } else if (callePrincipal) {
+                        textoPantalla += `<br>Dirección: ${callePrincipal}`;
+                        direccionGuardada = callePrincipal;
+                    } else if (address.suburb) {
                         textoPantalla += `<br>Barrio: ${address.suburb}`;
+                        direccionGuardada = address.suburb;
                     }
+
                     if (address.municipality) {
                         textoPantalla += `<br>Distrito: ${address.municipality}`;
                     }
@@ -72,10 +78,7 @@
                     if (address.state) {
                         textoPantalla += `<br>Departamento: ${address.state}`;
                     }
-                    if (address.country) {
-                        textoPantalla += `<br>País: ${address.country}`;
-                    }
-
+                    
                     document.getElementById('direccion').innerHTML = textoPantalla;
                     
                     // Asignar los valores a las variables globales para el formulario
@@ -84,7 +87,7 @@
                     distritoGuardado = address.municipality || '';
                     ciudadGuardada = address.city || address.town || address.village || '';
                     barrioGuardado = address.neighbourhood || address.suburb || '';
-                    direccionGuardada = address.road || '';
+
                 })
                 .catch(error => {
                     console.error('Error al obtener la dirección:', error);
