@@ -51,29 +51,27 @@
                     var textoPantalla = `Lat: ${lat.toFixed(6)}, Lon: ${lng.toFixed(6)}`;
                     
                     var callePrincipal = address.road || '';
-                    var calleTransversal = address.crossing || address.suburb || address.neighbourhood || '';
-                    
-                    // Lógica para mostrar las calles en pantalla
+                    var calleTransversal = address.crossing || '';
+                    var barrio = address.neighbourhood || address.suburb || '';
+
+                    let direccionTexto = '';
                     if (callePrincipal && calleTransversal) {
-                        textoPantalla += `<br>Dirección: ${callePrincipal} y ${calleTransversal}`;
-                        direccionGuardada = `${callePrincipal} y ${calleTransversal}`;
+                        direccionTexto = `${callePrincipal} y ${calleTransversal}`;
                     } else if (callePrincipal) {
-                        textoPantalla += `<br>Dirección: ${callePrincipal}`;
-                        direccionGuardada = callePrincipal;
-                    } else if (address.suburb) {
-                        textoPantalla += `<br>Dirección: ${address.suburb}`;
-                        direccionGuardada = address.suburb;
-                    } else if (address.neighbourhood) {
-                        textoPantalla += `<br>Dirección: ${address.neighbourhood}`;
-                        direccionGuardada = address.neighbourhood;
+                        direccionTexto = callePrincipal;
+                    } else if (barrio) {
+                        // Si no hay calle principal, usa el barrio como dirección principal.
+                        direccionTexto = barrio;
                     }
 
-                    if (address.neighbourhood) {
-                        textoPantalla += `<br>Barrio: ${address.neighbourhood}`;
-                        barrioGuardado = address.neighbourhood;
-                    } else if (address.suburb) {
-                        textoPantalla += `<br>Barrio: ${address.suburb}`;
-                        barrioGuardado = address.suburb;
+                    if (direccionTexto) {
+                        textoPantalla += `<br>Dirección: ${direccionTexto}`;
+                        direccionGuardada = direccionTexto;
+                    }
+                    
+                    if (barrio) {
+                        textoPantalla += `<br>Barrio: ${barrio}`;
+                        barrioGuardado = barrio;
                     }
 
                     if (address.municipality) {
@@ -92,7 +90,6 @@
                     
                     document.getElementById('direccion').innerHTML = textoPantalla;
                     
-                    // Asignar los valores a las variables globales para el formulario
                     coordsGuardadas = { lat: lat.toFixed(6), lon: lng.toFixed(6) };
                     departamentoGuardado = address.state || '';
                     distritoGuardado = address.municipality || '';
@@ -100,7 +97,6 @@
                     if (!barrioGuardado) { 
                       barrioGuardado = address.neighbourhood || address.suburb || '';
                     }
-
                 })
                 .catch(error => {
                     console.error('Error al obtener la dirección:', error);
@@ -108,13 +104,11 @@
                 });
         }
         
-        // Actualiza la ubicación cuando se arrastra el marcador
         marcador.on('dragend', function(event) {
             var latLng = event.target.getLatLng();
             obtenerDireccion(latLng.lat, latLng.lng);
         });
 
-        // Actualiza la ubicación cuando se hace clic en el mapa
         map.on('click', function(event) {
             var latLng = event.latlng;
             marcador.setLatLng(latLng);
@@ -127,7 +121,6 @@
             if (coordsGuardadas) {
                 var url = "https://docs.google.com/forms/d/e/1FAIpQLSfXlPeQIKBEYyfgJRg-B6vUM2mGbkSqlmVciFJCgTHy9AoSsQ/viewform?usp=pp_url";
                 
-                // Agrega las variables a la URL
                 url += "&entry.391303732=" + coordsGuardadas.lat;
                 url += "&entry.1348054148=" + coordsGuardadas.lon;
                 url += "&entry.1192183489=" + encodeURIComponent(departamentoGuardado);
@@ -136,7 +129,6 @@
                 url += "&entry.236446644=" + encodeURIComponent(barrioGuardado);
                 url += "&entry.499772030=" + encodeURIComponent(direccionGuardada);
                 
-                // Redirige al usuario al formulario con las coordenadas en la URL
                 window.location.href = url;
             } else {
                 alert("Por favor, selecciona una ubicación en el mapa antes de continuar.");
