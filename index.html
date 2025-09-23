@@ -42,7 +42,8 @@
         var marcador = L.marker([latitudInicial, longitudInicial], { draggable: true }).addTo(map);
 
         function obtenerDireccion(lat, lng) {
-            var url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
+            // Se agrega el parámetro de zoom para enfocar la búsqueda en calles
+            var url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=17`;
 
             fetch(url)
                 .then(response => response.json())
@@ -51,7 +52,7 @@
                     var textoPantalla = `Lat: ${lat.toFixed(6)}, Lon: ${lng.toFixed(6)}`;
                     
                     var callePrincipal = address.road || '';
-                    var calleTransversal = address.road_along || address.crossing || '';
+                    var calleTransversal = address.crossing || '';
                     var barrio = address.neighbourhood || address.suburb || '';
 
                     let direccionTexto = '';
