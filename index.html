@@ -54,13 +54,27 @@
                     var calleTransversal = address.crossing || '';
                     var barrio = address.neighbourhood || address.suburb || '';
 
+                    // Si la calle transversal no se encuentra en `crossing`, se busca en el nombre completo de la dirección
+                    if (!calleTransversal && data.display_name) {
+                        const partes = data.display_name.split(', ');
+                        for (let i = 0; i < partes.length; i++) {
+                            // Busca la calle principal para luego encontrar la transversal
+                            if (partes[i] === callePrincipal) {
+                                if (i > 0) {
+                                    // La calle transversal es la parte anterior en el nombre completo
+                                    calleTransversal = partes[i-1];
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
                     let direccionTexto = '';
                     if (callePrincipal && calleTransversal) {
                         direccionTexto = `${callePrincipal} y ${calleTransversal}`;
                     } else if (callePrincipal) {
                         direccionTexto = callePrincipal;
                     } else if (barrio) {
-                        // Si no hay calle principal, usa el barrio como dirección principal.
                         direccionTexto = barrio;
                     }
 
